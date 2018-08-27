@@ -578,7 +578,7 @@ public class Execution {
                     ArrayList aWords = new ArrayList();
                     ArrayList aConsecutiveWords = new ArrayList();
                     ArrayList nonFollowerScreenName = new ArrayList();
-                    
+                    ArrayList dateInWeek = new ArrayList();
                     for(int i = 0; i < numberOfRecentTweets; i++) // loop through the recent tweets
                     { 
                         for(int contentFeature = 0 ; contentFeature < featureNamesInContentBased.size(); contentFeature++) // array of features
@@ -599,6 +599,7 @@ public class Execution {
                                 }
                                 if(checkDate(TimePublic, dtpFrom, dtpTo))
                                 {
+                                    dateInWeek.add(TimePublic);
                                     if(i <= nList.getLength()-2)
                                     {
                                         String STweet = nextElement.getElementsByTagName("created_at").item(0).getTextContent();
@@ -2236,6 +2237,104 @@ public class Execution {
                                    userFeatureValue += result + ","; 
                                 else
                                     userFeatureValue += result + "," + nameOfFile +","+ spamProfileUsers + newline;                                  
+                            }
+                            if(featureName.equals("Number of tweets on Monday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempMonday = dateInWeek.get(i).toString();
+                                    if(tempMonday.contains("Monday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            }
+                            if(featureName.equals("Number of tweets on Tuesday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempTuesday = dateInWeek.get(i).toString();
+                                    if(tempTuesday.contains("Tuesday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            }
+                            if(featureName.equals("Number of tweets on Wednesday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempWednesday = dateInWeek.get(i).toString();
+                                    if(tempWednesday.contains("Wednesday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            } 
+                            if(featureName.equals("Number of tweets on Thursday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempThursday = dateInWeek.get(i).toString();
+                                    if(tempThursday.contains("Thursday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            } 
+                            if(featureName.equals("Number of tweets on Friday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempFriday = dateInWeek.get(i).toString();
+                                    if(tempFriday.contains("Friday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            } 
+                            if(featureName.equals("Number of tweets on Saturday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempSaturday = dateInWeek.get(i).toString();
+                                    if(tempSaturday.contains("Saturday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
+                            }
+                            if(featureName.equals("Number of tweets on Sunday"))
+                            {
+                                double result = 0;
+                                for(int i = 0; i < dateInWeek.size(); i++)
+                                {
+                                    String tempSunday = dateInWeek.get(i).toString();
+                                    if(tempSunday.contains("Sunday"))
+                                        result++;
+                                }
+                                if(!featureName.equals(lastUserFeature))
+                                    userFeatureValue += result + ",";
+                                else
+                                    userFeatureValue += result + "," + nameOfFile + "," + spamProfileUsers + newline;
                             }                             
                         }
                     }
@@ -2390,23 +2489,18 @@ public class Execution {
     }
     public String classification(HashMap<String,String> trainingHM, HashMap<String,String> testingHM,String algorithm, ArrayList aEvaluationMetrics) throws FileNotFoundException, IOException, Exception
     {
+        DecimalFormat df = new DecimalFormat("0.00");
         String newline = System.getProperty("line.separator");
         String result = "";
         String nameOfSystem = "";
         String evaluationMetrics = "";
         String trainingNameSystem = "";
-        Iterator itTraining = trainingHM.entrySet().iterator();
-        while (itTraining.hasNext()) 
-        {
-            Map.Entry pair = (Map.Entry)itTraining.next();
+        for (Map.Entry pair : trainingHM.entrySet()) {
             nameOfSystem = (String) pair.getValue();  
             trainingNameSystem = (String) pair.getValue();
             DataSource sourceTraining = new DataSource((String) pair.getKey());
-            Iterator itTesting = testingHM.entrySet().iterator();
             //testing dataset
-            while (itTesting.hasNext())
-            {
-                Map.Entry pairGetTesting = (Map.Entry) itTesting.next();
+            for (Map.Entry pairGetTesting : testingHM.entrySet()) {
                 String nameOfTestingSystem = (String) pairGetTesting.getValue();
                 if(trainingNameSystem.equalsIgnoreCase(nameOfTestingSystem))
                 {
@@ -2432,7 +2526,7 @@ public class Execution {
                             if(aEvaluationMetrics.get(i).equals("FMeasure"))
                                 evaluationMetrics += "FMeasure: " + eval.recall(1) + "   ";
                             if(aEvaluationMetrics.get(i).equals("TruePositive"))
-                                evaluationMetrics += "TruePositive: " + eval.truePositiveRate(1) + "   ";
+                                evaluationMetrics += "True Positive: " + eval.truePositiveRate(1) + "   ";
                             if(aEvaluationMetrics.get(i).equals("TrueNegative"))
                                 evaluationMetrics += "TrueNegative: " + eval.trueNegativeRate(1) + "   ";  
                             if(aEvaluationMetrics.get(i).equals("FalsePositive"))
@@ -2440,6 +2534,7 @@ public class Execution {
                             if(aEvaluationMetrics.get(i).equals("FalseNegative"))
                                 evaluationMetrics += "FalseNegative: " + eval.falseNegativeRate(i) + "   ";                               
                         }
+                        System.out.println(evaluationMetrics);
                     }
                     if(algorithm.equals("SVM"))
                     {
@@ -2510,7 +2605,7 @@ public class Execution {
                             if(aEvaluationMetrics.get(i).equals("FMeasure"))
                                 evaluationMetrics += "FMeasure: " + eval.recall(1) + "   ";
                             if(aEvaluationMetrics.get(i).equals("TruePositive"))
-                                evaluationMetrics += "TruePositive: " + eval.truePositiveRate(1) + "   ";
+                                evaluationMetrics += "True Positive: " + df.format(eval.truePositiveRate(1)) + "   ";
                             if(aEvaluationMetrics.get(i).equals("TrueNegative"))
                                 evaluationMetrics += "TrueNegative: " + eval.trueNegativeRate(1) + "   ";  
                             if(aEvaluationMetrics.get(i).equals("FalsePositive"))
@@ -2547,9 +2642,9 @@ public class Execution {
                     }                    
                 }
             }
-           result += nameOfSystem + newline + evaluationMetrics + newline;
-           nameOfSystem = "";
-           evaluationMetrics = "";
+            result += nameOfSystem + " result(s)" +":" + newline + newline + evaluationMetrics + newline;
+            nameOfSystem = "";
+            evaluationMetrics = "";
         }
         //System.out.println(nameOfSystem);
         return result;
